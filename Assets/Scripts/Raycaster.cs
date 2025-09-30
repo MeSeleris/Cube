@@ -8,7 +8,7 @@ public class Raycaster : MonoBehaviour
     private Ray _ray;
     private RaycastHit _hit;
     
-    public event UnityAction<Cube> Find;
+    public event UnityAction<Cube> Ray;
 
     private void OnEnable()
     {
@@ -23,17 +23,15 @@ public class Raycaster : MonoBehaviour
     private void RayHit()
     {
         _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if(Physics.Raycast(_ray, out _hit))
+        Debug.Log($"Clic11111k");
+        if (Physics.Raycast(_ray, out _hit))
         {
             Debug.Log($"Попал в: {_hit.collider.gameObject.name}");
             Debug.DrawRay(_ray.origin, _ray.direction * _hit.distance, Color.red, 0.1f);
-
-            Cube hitCube = _hit.collider.GetComponent<Cube>();
             
-            if( hitCube != null)
+            if(_hit.collider.TryGetComponent(out Cube cube))
             {
-                Find?.Invoke(hitCube);
+                Ray?.Invoke(cube);
             }
         }
     }

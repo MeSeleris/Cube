@@ -11,6 +11,7 @@ public class InputViewCube : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(CommandPressButton))
         {
+            Debug.Log($"Click");
             Click?.Invoke();
         }
     }

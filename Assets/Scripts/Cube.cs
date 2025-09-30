@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private Raycaster _raycaster;
+    [SerializeField] private ViewCube _view;
 
     private int _chanceMax = 100;
     private int _currentChance = 100;
@@ -18,12 +18,12 @@ public class Cube : MonoBehaviour
 
     private void OnEnable()
     {
-        _raycaster.Find += CubeDivider;
+        _view.Find += CubeDivider;
     }
 
     private void OnDisable()
     {
-        _raycaster.Find -= CubeDivider;
+        _view.Find -= CubeDivider;
     }
 
     private void CubeDivider(Cube cube)
