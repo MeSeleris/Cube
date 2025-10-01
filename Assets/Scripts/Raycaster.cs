@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.Events;
+using System;
 
 public class Raycaster : MonoBehaviour
 {
@@ -7,31 +7,25 @@ public class Raycaster : MonoBehaviour
 
     private Ray _ray;
     private RaycastHit _hit;
-    
-    public event UnityAction<Cube> Ray;
 
-    private void OnEnable()
-    {
-        _input.Click += RayHit;
-    }
+    public event Action<Cube> Ray;
 
-    private void OnDisable()
+    private void Update()
     {
-        _input.Click -= RayHit;
-    }
-
-    private void RayHit()
-    {
-        _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Debug.Log($"Clic11111k");
-        if (Physics.Raycast(_ray, out _hit))
+        if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log($"Попал в: {_hit.collider.gameObject.name}");
-            Debug.DrawRay(_ray.origin, _ray.direction * _hit.distance, Color.red, 0.1f);
-            
-            if(_hit.collider.TryGetComponent(out Cube cube))
+            _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(_ray, out _hit))
             {
-                Ray?.Invoke(cube);
+                //Debug.Log($"Попал в: {_hit.collider.gameObject.name}");
+                Debug.DrawRay(_ray.origin, _ray.direction * _hit.distance, Color.red, 0.1f);
+
+                if (_hit.collider.TryGetComponent(out Cube cube))
+                {
+                    Debug.Log(cube.gameObject.name);
+                    Ray?.Invoke(cube);
+                }
             }
         }
     }

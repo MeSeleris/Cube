@@ -1,43 +1,26 @@
 using UnityEngine;
-using UnityEngine.Events;
+using System;
 
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private ViewCube _view;
+    [SerializeField] private Handler _handler;
 
-    private int _chanceMax = 100;
-    private int _currentChance = 100;
-    private float _reductionFactor = 2f;
-
-    public event UnityAction Spawn;
-
-    public void Initialize(int spawnCount)
-    {
-        _currentChance = (int)(_chanceMax / Mathf.Pow(_reductionFactor, spawnCount - 1));
-    }
+    [SerializeField] public int ChanceMax {  get; private set; }
+    [SerializeField] public int CurrentChance { get; private set; }
+    [SerializeField] public int ReductionFactor { get; private set; }
 
     private void OnEnable()
     {
-        _view.Find += CubeDivider;
+        _handler.Destroyer += Destroyer;
     }
-
     private void OnDisable()
     {
-        _view.Find -= CubeDivider;
+        _handler.Destroyer -= Destroyer;
     }
 
-    private void CubeDivider(Cube cube)
+    private void Destroyer()
     {
-        if(cube != this)
-            return;
-
-        int currentNumber = Random.Range(0, _chanceMax + 1);
-
-        if (currentNumber < _currentChance)
-        {
-            Spawn?.Invoke();
-        }
-
         Destroy(gameObject);
+        CurrentChance /= ReductionFactor;
     }
 }
