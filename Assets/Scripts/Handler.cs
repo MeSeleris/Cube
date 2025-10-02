@@ -3,11 +3,9 @@ using UnityEngine;
 
 public class Handler : MonoBehaviour
 {
-    [SerializeField] private Cube _cube;
     [SerializeField] private Raycaster _raycaster;
 
-    public event Action<Cube> Spawn;
-    public event Action Destroyer;
+    public event Action<Cube> SpawnCube;
 
     private void OnEnable()
     {
@@ -20,13 +18,13 @@ public class Handler : MonoBehaviour
 
     private void Explosion(Cube cube)
     {
-        int examinationNum = UnityEngine.Random.Range(0 , _cube.ChanceMax);
+        int examinationNum = UnityEngine.Random.Range(0 , cube.ChanceMax);
 
-        if(examinationNum < _cube.ChanceMax )
+        if(examinationNum < cube.CurrentChance)
         {
-            Spawn?.Invoke(cube);
+            SpawnCube?.Invoke(cube);
         }
 
-        Destroyer?.Invoke();
+        Destroy(cube.gameObject);
     }
 }

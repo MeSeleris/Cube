@@ -3,8 +3,6 @@ using System;
 
 public class Raycaster : MonoBehaviour
 {
-    [SerializeField] private InputViewCube _input;
-
     private Ray _ray;
     private RaycastHit _hit;
 
@@ -18,9 +16,6 @@ public class Raycaster : MonoBehaviour
 
             if (Physics.Raycast(_ray, out _hit))
             {
-                //Debug.Log($"Попал в: {_hit.collider.gameObject.name}");
-                Debug.DrawRay(_ray.origin, _ray.direction * _hit.distance, Color.red, 0.1f);
-
                 if (_hit.collider.TryGetComponent(out Cube cube))
                 {
                     Debug.Log(cube.gameObject.name);

@@ -1,26 +1,18 @@
 using UnityEngine;
-using System;
 
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private Handler _handler;
+    [field: SerializeField] public int ChanceMax {  get; private set; }
+    [field: SerializeField] public int CurrentChance { get; private set; }
+    [field: SerializeField] public int ReductionFactor { get; private set; }
 
-    [SerializeField] public int ChanceMax {  get; private set; }
-    [SerializeField] public int CurrentChance { get; private set; }
-    [SerializeField] public int ReductionFactor { get; private set; }
-
-    private void OnEnable()
+    public void DivideChance()
     {
-        _handler.Destroyer += Destroyer;
-    }
-    private void OnDisable()
-    {
-        _handler.Destroyer -= Destroyer;
+        CurrentChance /= Mathf.Max(1, CurrentChance / ReductionFactor);
     }
 
-    private void Destroyer()
+    public void SetChildChance (int parentChance)
     {
-        Destroy(gameObject);
-        CurrentChance /= ReductionFactor;
+        CurrentChance = Mathf.Max(1, parentChance / ReductionFactor);
     }
 }

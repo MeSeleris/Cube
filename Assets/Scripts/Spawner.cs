@@ -1,16 +1,14 @@
 using UnityEngine;
-using System;
 
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private Handler _handler;
     [SerializeField] private Cube _prefabToSpawn;
-    [SerializeField] private Cube _cube;
     [SerializeField] private Transform _transform;
 
     private int _spawnMin = 2;
     private int _spawnMax = 6;
-    private int _currentSpawn;
+
 
     private void Start()
     {
@@ -19,34 +17,37 @@ public class Spawner : MonoBehaviour
 
     private void OnEnable()
     {
-        _handler.Spawn += Spawn;
+        _handler.SpawnCube += Spawn;
     }
     private void OnDisable()
     {
-        _handler.Spawn -= Spawn;
+        _handler.SpawnCube -= Spawn;
     }
 
     private void Spawn(Cube cube)
     {
-        _currentSpawn = UnityEngine.Random.Range(_spawnMin, _spawnMax + 1);
+        int _currentSpawn = Random.Range(_spawnMin, _spawnMax + 1);
+        int parentCurrentChance = cube.CurrentChance;
 
         for (int i = 0; i < _currentSpawn; i++)
         {
-            Vector3 spawnPosition = transform.position;
+            Vector3 spawnPosition = cube.transform.position;
             Quaternion spawnRotation = Quaternion.identity;
 
             Cube spawnedCube = Instantiate(_prefabToSpawn, spawnPosition, spawnRotation);
+            Cube spawnedCubeScript = spawnedCube.GetComponent<Cube>();
+            spawnedCubeScript.SetChildChance(parentCurrentChance);
 
-            Vector3 newScale = DivideScale();
+            Vector3 newScale = DivideScale(cube);
             spawnedCube.transform.localScale = newScale;
 
-            spawnedCube.GetComponent<Cube>().enabled = true;
+            spawnedCubeScript.enabled = true;
         }
     }
 
-    private Vector3 DivideScale()
+    private Vector3 DivideScale(Cube cube)
     {
-        Vector3 scale = transform.localScale / 2f;
+        Vector3 scale = cube.transform.localScale / 2f;
 
         return scale;
     }
